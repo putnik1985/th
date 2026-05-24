@@ -1,0 +1,8 @@
+input=th-phase-only.i
+../th-opt -i $input
+cat out_T_0010.csv | awk 'BEGIN{FS=","; print "x", "time=0.10 (MOOSE)"} NR > 1 {print $3,$2}' > T_time_010.dat
+cat out_T_0020.csv | awk 'BEGIN{FS=","; print "x", "time=0.20 (MOOSE)"} NR > 1 {print $3,$2}' > T_time_020.dat
+cat out_T_0050.csv | awk 'BEGIN{FS=","; print "x", "time=0.50 (MOOSE)"} NR > 1 {print $3,$2}' > T_time_050.dat
+cat out_T_0100.csv | awk 'BEGIN{FS=","; print "x", "time=1.00 (MOOSE)"} NR > 1 {print $3,$2}' > T_time_100.dat
+cat out_T_0200.csv | awk 'BEGIN{FS=","; print "x", "time=2.00 (MOOSE)"} NR > 1 {print $3,$2}' > T_time_200.dat
+gnuplot -p plot.gpl

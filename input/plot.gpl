@@ -1,0 +1,15 @@
+xmin = 0.0
+xmax = 2.0
+
+set grid
+set xrange [xmin:xmax]
+set xlabel "Distance, m"
+set ylabel "Temperature, C"
+set title "Thermal Phase Change"
+
+##########set datafile separator comma
+plot   'T_time_010.dat' title columnhead with lines dt 4 lc "#FF0000",\
+       'T_time_020.dat' title columnhead with lines dt 4 lc "#00FF00",\
+       'T_time_050.dat' title columnhead with lines dt 4 lc "#0000FF",\
+       'T_time_100.dat' title columnhead with lines dt 4 lc "#00FFFF",\
+       'T_time_200.dat' title columnhead with lines dt 4 lc "#00AFFF"
