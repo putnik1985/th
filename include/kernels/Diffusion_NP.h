@@ -11,55 +11,23 @@
 
 #include "Kernel.h"
 
-/**
- * Define the Kernel for a convection operator that looks like:
- *
- * (lambda grad(u),grad(test))
- *
- * where lambda is a given constant.
- */
 class Diffusion_NP : public Kernel
 {
 public:
-  /**
-   * This is the constructor declaration.  This class takes a
-   * string and a InputParameters object, just like other
-   * Kernel-derived classes.
-   */
   Diffusion_NP(const InputParameters & parameters);
-
-  /**
-   * validParams returns the parameters that this Kernel accepts / needs
-   * The actual body of the function MUST be in the .C file.
-   */
+  Real conductivity(Real);
   static InputParameters validParams();
 
 protected:
-  /**
-   * Responsible for computing the residual at one quadrature point.
-   * This function should always be defined in the .C file.
-   */
   virtual Real computeQpResidual() override;
-
-  /**
-   * Responsible for computing the diagonal block of the preconditioning matrix.
-   * This is essentially the partial derivative of the residual with respect to
-   * the variable this kernel operates on ("u").
-   *
-   * Note that this can be an approximation or linearization.  In this case it's
-   * not because the Jacobian of this operator is easy to calculate.
-   *
-   * This function should always be defined in the .C file.
-   */
   virtual Real computeQpJacobian() override;
 
 private:
-  /**
-   * A vector object for storing the velocity.  Convenient for
-   * computing dot products.
-   */
-  Real _lambda_unfrozen;
-  Real _lambda_frozen;
-  Real _Tf;
-  Real _T0;
+  Real kice;
+  Real kdry;
+  Real thermal_inertia;
+  Real density;
+  Real capacity;
+  Real n;
+  Real F;
 };

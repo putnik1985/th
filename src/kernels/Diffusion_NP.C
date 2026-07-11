@@ -8,50 +8,50 @@
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
 #include "Diffusion_NP.h"
-
-/**
- * All MOOSE based object classes you create must be registered using this macro.  The first
- * argument is the name of the App you entered in when running the stork.sh script with an "App"
- * suffix. If you ran "stork.sh Example", then the argument here becomes "ExampleApp". The second
- * argument is the name of the C++ class you created.
- */
 registerMooseObject("thApp", Diffusion_NP);
 
-/**
- * This function defines the valid parameters for
- * this Kernel and their default values
- */
 InputParameters
 Diffusion_NP::validParams()
 {
   InputParameters params = Kernel::validParams();
-  params.addRequiredParam<Real>("lambda_unfrozen", "input paramter for the diffusion: thermal conductivity of soil");
-  params.addRequiredParam<Real>("lambda_frozen", "input paramter for the diffusion: thermal conductivity of water");
-  params.addRequiredParam<Real>("T0", "input paramter for the diffusion: onset on freezing temperature");
-  params.addRequiredParam<Real>("Tf", "input paramter for the diffusion: full freezing temperature");
+  params.addRequiredParam<Real>("kice", "ice thermal conduction");
+  params.addRequiredParam<Real>("thermal_inertia", "thermal inertia");
+  params.addRequiredParam<Real>("density", "density");
+  params.addRequiredParam<Real>("capacity", "capacity");
+  params.addRequiredParam<Real>("porosity", "porosity");
+  params.addRequiredParam<Real>("volumetric_filling", "volumetric filling");
   return params;
 }
 
 Diffusion_NP::Diffusion_NP(const InputParameters & parameters)
   : // You must call the constructor of the base class first
     Kernel(parameters),
-    _lambda_unfrozen(getParam<Real>("lambda_unfrozen")),
-    _lambda_frozen(getParam<Real>("lambda_frozen")),
-    _T0(getParam<Real>("T0")),
-    _Tf(getParam<Real>("Tf"))
+    kice(getParam<Real>("kice")),
+    thermal_inertia(getParam<Real>("thermal_inertia")),
+    density(getParam<Real>("density")),
+    capacity(getParam<Real>("capacity")),
+    n(getParam<Real>("porosity")),
+    F(getParam<Real>("volumetric_filling"))
 {
 }
 
 Real
 Diffusion_NP::computeQpResidual()
 {
-  Real lambda = (_u[_qp] - _Tf)/(_T0 - _Tf) * _lambda_unfrozen + (1. - (_u[_qp] - _Tf)/(_T0 - _Tf)) * _lambda_frozen; 
+  Real T = _u[_qp];
+  Real lambda = conductivity(T);
   return _grad_test[_i][_qp] * (lambda * _grad_u[_qp]);
 }
 
 Real
 Diffusion_NP::computeQpJacobian()
 {
-  Real lambda = (_u[_qp] - _Tf)/(_T0 - _Tf) * _lambda_unfrozen + (1. - (_u[_qp] - _Tf)/(_T0 - _Tf)) * _lambda_frozen; 
+  Real T = _u[_qp];
+  Real lambda = conductivity(T);
   return _grad_test[_i][_qp] * (lambda * _grad_phi[_j][_qp]);
+}
+
+Real
+Diffusion_NP::conductivity(Real T){
+  return 0.85 * n * kice * F + thermal_inertia * thermal_inertia / (density * capacity);
 }

@@ -13,11 +13,6 @@ protected:
   virtual Real computeQpJacobian() override;
 
 private:
-  Real volume_heat_capacity;
-  Real ice_density;
-  Real water_density;
-  Real porosity;
-  Real latent_heat_fusion;
-  Real scale;
+  Real capacity;
+  Real density;
 };
-
