@@ -21,17 +21,22 @@
 
 [BCs]
   [left_temp]
-    type = DirichletBC
+    type = Radiation
     variable = T
     boundary = left
-    value = 267.
+    Q = 10.
+    k = 2.4
+   eps=0.95
+   sigma=5.6704e-8
+   Lf = 6.0e+5 
+   dmCO2_dt = 1.0
   []
 
   [right_temp]
-    type = DirichletBC
+    type = NeumannBC
     variable = T
     boundary = right
-    value = 273.
+    value = 0.
   []
 []
 
@@ -71,7 +76,7 @@
 [Executioner]
   type = Transient
   solve_type = PJFNK
-  dt = 0.02
+  dt = 0.01
   end_time = 1.0
 []
 
