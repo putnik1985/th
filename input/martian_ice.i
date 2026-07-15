@@ -77,7 +77,7 @@
   type = Transient
   solve_type = PJFNK
   dt = 0.01
-  end_time = 1.0
+  end_time = 30.
 []
 
 [VectorPostprocessors]
